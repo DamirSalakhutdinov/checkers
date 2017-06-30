@@ -11,33 +11,33 @@
 
 struct Step{			//это структура для записи возможных ходов при клике на определенную шашку
 	int green;		//при нажатии возможные ходы будут окрашиваться в зеленый
-	int who;
-	int dead[4];	
+	int who;		//номер клетки, на которую было произведено нажатие
+	int dead[4];		//кто умирает при таком ходе
 };
 
-class check20{
+class check20{			//контейнер для хранения положения шашек
 public:
-	int a[20];  
-	wxPoint pos[20];
-	Step go[2];	
-	int turn;
-	int my_color;
-	int ready;
+	int a[20];  		//если a[i] = 1, то на i-ой клетке стоит белая шашка, если -1 - черная, 0 - ничего
+	wxPoint pos[20];	//координаты клеток в отведенном для поля окне
+	Step go[2];		//для хранения двух возможных ходов при клике на шашку
+	int turn;		//для хранения информации о том, кто в данный момент ходит
+	int my_color;		//цвет шашек получаемый пользователем при игре по сети
+	int ready;		//информация о готовности пользователи при игре по сети
 
 	check20();
-	int getNum(wxPoint);
-	void stepClear();
-	void stepPrep(int);
-	bool ingreen(int);
-	bool kill_opp();
-	int win_check();
-	void act(int);	
+	int getNum(wxPoint);	//выдает номер клетки по координате клика
+	void stepClear();	//убирает с поля целеные клетки, означающие возможные ходы при клике мимо шашек
+	void stepPrep(int);	//подготавливает ходы при клике на определенную шашку, окрашивает вожные ходы в зеленый
+	bool ingreen(int);	//проверяет, окрашено ли поле в зеленый
+	bool kill_opp();	//проверяет, есть ли возможность рубить, если есть, то иных ходов делать нельзя
+	int win_check();	//проверяет, опеделился ли победитель в партии
+	void act(int);		//осуществляет выбранный ход
 	
 
 
-	class Iter{
-		int* arr;
-		int idx;
+	class Iter{		//так как поле представляет из себя кольцо из 20 клеток, а колируется как массив
+		int* arr;	//был создан итератор, чтобы не беспокоиться о выходе за пределы массива
+		int idx;	//при просмотре соседних клеток
 
 		public:
 
@@ -48,48 +48,42 @@ public:
 	};
 };
 
-// Класс, описывающий панель для рисования
+//класс, описывающий панель с полем для игры
 class DrawPanel: public wxPanel{
   public:	
-// в конструкторе указывается адрес объекта, который ее содержит
-
-        DrawPanel(wxPanel *parent, wxStatusBar *sb, wxSocketClient *sc);
- // рисовалка
-        void OnPaint(wxPaintEvent & event);
-// составляющие цвета
-	void OnDclick(wxMouseEvent& event); ///////////////////////////////////////////////
-	check20 pl;
-	wxStatusBar *dpsb;
-	wxSocketClient *m_sc;
+        DrawPanel(wxPanel *parent, wxStatusBar *sb, wxSocketClient *sc); //в конструкторе указывается адрес объекта, который ее содержит
+        void OnPaint(wxPaintEvent & event);	//для рисования
+	void OnDclick(wxMouseEvent& event); 	//для работы с кликами
+	check20 pl;				//информация о поле
+	wxStatusBar *dpsb;			//для вывода сообщений в статус бар
+	wxSocketClient *m_sc;			//информация о сокете
 };
 
-// Фрайм  который содержит панель, на которой две кнопки,
-// и панель для рисования
+// Фрейм, содержащий предыдущую панель, кнопки, статус бар
 class AddE: public wxFrame{   
-	// Это наш клиентский сокет 
-	wxSocketClient * m_SocketClient;
+	wxSocketClient * m_SocketClient;		//клиентский сокет 
 public:
 	AddE(const wxString& title);
 	~AddE(); 
 	DECLARE_EVENT_TABLE()    
 	
-	wxPanel *m_pan; 		// панель для кнопок и планшета
-	wxButton *bt, *ng; 		//, *bp; // кнопки смены цвета и закрытия
-	DrawPanel *dp; 		 // панель для рисования
+	wxPanel *m_pan; 		
+	wxButton *bt, *ng; 		
+	DrawPanel *dp; 		 
 	
-	wxMenuBar *menubar; 	// полоска для меню
-	wxMenu *file; 		// менюшка  на полоске
-	wxStatusBar *sb;		 // статус бар
+	wxMenuBar *menubar;	//полоска для меню
+	wxMenu *file; 		
+	wxStatusBar *sb;	// статус бар
 	wxString ss;
-	void OnQuit(wxCommandEvent& event);
-	void OnNew(wxCommandEvent& event);
+	void OnQuit(wxCommandEvent& event);	//работает при нажатии на кнопку "quit"
+	void OnNew(wxCommandEvent& event);	//new - новая игра
 	
 	// Обработчик событий от сокета
-    void OnClientSocketEvent(wxSocketEvent & event);
-    // Обработчик кнопки КОННЕКТ
-    void OnConnect(wxCommandEvent & event);
-    // Обработчик кнопки ДИСКОННЕКТ
-    void OnDisconnect(wxCommandEvent & event);
+	void OnClientSocketEvent(wxSocketEvent & event);
+	// Обработчик кнопки КОННЕКТ
+	void OnConnect(wxCommandEvent & event);
+	// Обработчик кнопки ДИСКОННЕКТ
+	void OnDisconnect(wxCommandEvent & event);
 };
 
 
