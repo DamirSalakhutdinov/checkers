@@ -157,29 +157,6 @@ void MyFrame::ShowClientList()
 		}
 }
 
-/*
-void MyFrame::OnMessageInput(wxCommandEvent &event)
-{
-    TransferDataFromWindow();
-    // Если нам есть что переслать
-    if(m_MessageStr.IsEmpty()) return;
-    wxSocketBase * sock;
-    // Дописываем что это сообшение от сервера
-    m_MessageStr = _("Server> ")+m_MessageStr+_("\n");
-    // Отсылаем сообщение всем клиентам из списка
-//    for(wxSocketList::Node * node = m_Clients.GetFirst(); node; node = node->GetNext())
-     for(int i = 0 ; i < users; i++)
-    {
-        sock = sm[i].sock;
-        if(!sock) continue;
-        // Не забываем что для UNICODE-сборки размер символа может быть 2 байта, поэтому учитываем размер wxChar
-        sock->Write(m_MessageStr.GetData(), m_MessageStr.Length()*sizeof(wxChar));
-    }
-    m_LOGTextCtrl->AppendText(m_MessageStr+wxString(wxT(" ")));
-    m_MessageStr = wxEmptyString;
-    TransferDataToWindow();
-}
-*/
 
 void MyFrame::OnServerSocketEvent(wxSocketEvent & event)
 {
@@ -237,9 +214,6 @@ void MyFrame::OnClientSocketEvent(wxSocketEvent & event)
        
     wxSocketBase *sock = event.GetSocket();
     wxIPV4address addr,addr2;
-    
-  //  char *turn;
-  //  turn = "Your turn"   
   
     sock->GetLocal(addr);
     wxString message;
@@ -252,7 +226,7 @@ void MyFrame::OnClientSocketEvent(wxSocketEvent & event)
         {        
             // Прочитали его в буфер
             sock->Read(buffer, 20*sizeof(int));
-            // Если ошибка - поругались
+            // Если ошибка - выводим сообщение
             if(sock->Error())
             {
 				message << wxT("Ошибка чтения \n");

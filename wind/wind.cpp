@@ -1,6 +1,6 @@
 #include "wind.h"
 
-// constructor check20()
+
 check20::check20(){
 	for(int i = 0; i < 20; i++)
 		a[i] = FREE;
@@ -195,13 +195,7 @@ AddE::~AddE()
 	if(m_SocketClient){
 		m_SocketClient->Destroy();
 	}
-/*
-	delete m_pan;
-	delete bt;
-	delete ng;
-	delete dp;
-	delete menubar;
-*/
+
 }
 
 
@@ -210,9 +204,6 @@ void AddE::OnQuit(wxCommandEvent& event){
 };
 
 void AddE::OnNew(wxCommandEvent& event){
-	/*delete dp;
-	dp=new DrawPanel(m_pan, sb, m_SocketClient);*/
-	//new_game = 228
 	for(int i = 0; i < 20; i++)
 		dp->pl.a[i] = FREE;
 	for(int i = 2; i < 6; i++)
@@ -547,7 +538,6 @@ void DrawPanel::OnDclick(wxMouseEvent& event){
 	
 };
 
-///////////////// Iter /////////////////
 
 check20::Iter::Iter(int* a){
 	idx = 0;
@@ -565,9 +555,6 @@ check20::Iter* check20::Iter::operator++(int){
 int check20::Iter::operator[](int i){		
 	return (i + 20) % 20;
 };
-
-
-////////////////////////////////////////////////
 
 IMPLEMENT_APP(Pril);
 
